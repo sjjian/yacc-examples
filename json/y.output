@@ -1,0 +1,315 @@
+state 0 //
+
+    0 $accept: . json
+
+    FALSE   shift, and goto state 15
+    LC      shift, and goto state 10
+    LS      shift, and goto state 11
+    NULL    shift, and goto state 16
+    NUMBER  shift, and goto state 13
+    STRING  shift, and goto state 12
+    TRUE    shift, and goto state 14
+
+    array   goto state 9
+    false   goto state 6
+    json    goto state 1
+    null    goto state 7
+    number  goto state 4
+    object  goto state 8
+    str     goto state 3
+    true    goto state 5
+    value   goto state 2
+
+state 1 // FALSE [$end]
+
+    0 $accept: json .  [$end]
+
+    $end  accept
+
+state 2 // FALSE [$end]
+
+    1 json: value .  [$end]
+
+    $end  reduce using rule 1 (json)
+
+state 3 // STRING [$end]
+
+    2 value: str .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 2 (value)
+    COMMA  reduce using rule 2 (value)
+    RC     reduce using rule 2 (value)
+    RS     reduce using rule 2 (value)
+
+state 4 // NUMBER [$end]
+
+    3 value: number .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 3 (value)
+    COMMA  reduce using rule 3 (value)
+    RC     reduce using rule 3 (value)
+    RS     reduce using rule 3 (value)
+
+state 5 // TRUE [$end]
+
+    4 value: true .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 4 (value)
+    COMMA  reduce using rule 4 (value)
+    RC     reduce using rule 4 (value)
+    RS     reduce using rule 4 (value)
+
+state 6 // FALSE [$end]
+
+    5 value: false .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 5 (value)
+    COMMA  reduce using rule 5 (value)
+    RC     reduce using rule 5 (value)
+    RS     reduce using rule 5 (value)
+
+state 7 // NULL [$end]
+
+    6 value: null .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 6 (value)
+    COMMA  reduce using rule 6 (value)
+    RC     reduce using rule 6 (value)
+    RS     reduce using rule 6 (value)
+
+state 8 // LC STRING COLON FALSE RC [$end]
+
+    7 value: object .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 7 (value)
+    COMMA  reduce using rule 7 (value)
+    RC     reduce using rule 7 (value)
+    RS     reduce using rule 7 (value)
+
+state 9 // LS FALSE RS [$end]
+
+    8 value: array .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 8 (value)
+    COMMA  reduce using rule 8 (value)
+    RC     reduce using rule 8 (value)
+    RS     reduce using rule 8 (value)
+
+state 10 // LC
+
+    9 object: LC . object_data RC
+
+    STRING  shift, and goto state 23
+
+    object_data  goto state 22
+
+state 11 // LS
+
+   12 array: LS . array_data RS
+
+    FALSE   shift, and goto state 15
+    LC      shift, and goto state 10
+    LS      shift, and goto state 11
+    NULL    shift, and goto state 16
+    NUMBER  shift, and goto state 13
+    STRING  shift, and goto state 12
+    TRUE    shift, and goto state 14
+
+    array       goto state 9
+    array_data  goto state 17
+    false       goto state 6
+    null        goto state 7
+    number      goto state 4
+    object      goto state 8
+    str         goto state 3
+    true        goto state 5
+    value       goto state 18
+
+state 12 // STRING
+
+   15 str: STRING .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 15 (str)
+    COMMA  reduce using rule 15 (str)
+    RC     reduce using rule 15 (str)
+    RS     reduce using rule 15 (str)
+
+state 13 // NUMBER
+
+   16 number: NUMBER .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 16 (number)
+    COMMA  reduce using rule 16 (number)
+    RC     reduce using rule 16 (number)
+    RS     reduce using rule 16 (number)
+
+state 14 // TRUE
+
+   17 true: TRUE .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 17 (true)
+    COMMA  reduce using rule 17 (true)
+    RC     reduce using rule 17 (true)
+    RS     reduce using rule 17 (true)
+
+state 15 // FALSE
+
+   18 false: FALSE .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 18 (false)
+    COMMA  reduce using rule 18 (false)
+    RC     reduce using rule 18 (false)
+    RS     reduce using rule 18 (false)
+
+state 16 // NULL
+
+   19 null: NULL .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 19 (null)
+    COMMA  reduce using rule 19 (null)
+    RC     reduce using rule 19 (null)
+    RS     reduce using rule 19 (null)
+
+state 17 // LS FALSE [COMMA]
+
+   12 array: LS array_data . RS
+   14 array_data: array_data . COMMA value
+
+    COMMA  shift, and goto state 20
+    RS     shift, and goto state 19
+
+state 18 // LS FALSE [COMMA]
+
+   13 array_data: value .  [COMMA, RS]
+
+    COMMA  reduce using rule 13 (array_data)
+    RS     reduce using rule 13 (array_data)
+
+state 19 // LS FALSE RS
+
+   12 array: LS array_data RS .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 12 (array)
+    COMMA  reduce using rule 12 (array)
+    RC     reduce using rule 12 (array)
+    RS     reduce using rule 12 (array)
+
+state 20 // LS FALSE COMMA
+
+   14 array_data: array_data COMMA . value
+
+    FALSE   shift, and goto state 15
+    LC      shift, and goto state 10
+    LS      shift, and goto state 11
+    NULL    shift, and goto state 16
+    NUMBER  shift, and goto state 13
+    STRING  shift, and goto state 12
+    TRUE    shift, and goto state 14
+
+    array   goto state 9
+    false   goto state 6
+    null    goto state 7
+    number  goto state 4
+    object  goto state 8
+    str     goto state 3
+    true    goto state 5
+    value   goto state 21
+
+state 21 // LS FALSE COMMA FALSE [COMMA]
+
+   14 array_data: array_data COMMA value .  [COMMA, RS]
+
+    COMMA  reduce using rule 14 (array_data)
+    RS     reduce using rule 14 (array_data)
+
+state 22 // LC STRING COLON FALSE [COMMA]
+
+    9 object: LC object_data . RC
+   11 object_data: object_data . COMMA STRING COLON value
+
+    COMMA  shift, and goto state 27
+    RC     shift, and goto state 26
+
+state 23 // LC STRING
+
+   10 object_data: STRING . COLON value
+
+    COLON  shift, and goto state 24
+
+state 24 // LC STRING COLON
+
+   10 object_data: STRING COLON . value
+
+    FALSE   shift, and goto state 15
+    LC      shift, and goto state 10
+    LS      shift, and goto state 11
+    NULL    shift, and goto state 16
+    NUMBER  shift, and goto state 13
+    STRING  shift, and goto state 12
+    TRUE    shift, and goto state 14
+
+    array   goto state 9
+    false   goto state 6
+    null    goto state 7
+    number  goto state 4
+    object  goto state 8
+    str     goto state 3
+    true    goto state 5
+    value   goto state 25
+
+state 25 // LC STRING COLON FALSE [COMMA]
+
+   10 object_data: STRING COLON value .  [COMMA, RC]
+
+    COMMA  reduce using rule 10 (object_data)
+    RC     reduce using rule 10 (object_data)
+
+state 26 // LC STRING COLON FALSE RC
+
+    9 object: LC object_data RC .  [$end, COMMA, RC, RS]
+
+    $end   reduce using rule 9 (object)
+    COMMA  reduce using rule 9 (object)
+    RC     reduce using rule 9 (object)
+    RS     reduce using rule 9 (object)
+
+state 27 // LC STRING COLON FALSE COMMA
+
+   11 object_data: object_data COMMA . STRING COLON value
+
+    STRING  shift, and goto state 28
+
+state 28 // LC STRING COLON FALSE COMMA STRING
+
+   11 object_data: object_data COMMA STRING . COLON value
+
+    COLON  shift, and goto state 29
+
+state 29 // LC STRING COLON FALSE COMMA STRING COLON
+
+   11 object_data: object_data COMMA STRING COLON . value
+
+    FALSE   shift, and goto state 15
+    LC      shift, and goto state 10
+    LS      shift, and goto state 11
+    NULL    shift, and goto state 16
+    NUMBER  shift, and goto state 13
+    STRING  shift, and goto state 12
+    TRUE    shift, and goto state 14
+
+    array   goto state 9
+    false   goto state 6
+    null    goto state 7
+    number  goto state 4
+    object  goto state 8
+    str     goto state 3
+    true    goto state 5
+    value   goto state 30
+
+state 30 // LC STRING COLON FALSE COMMA STRING COLON FALSE [COMMA]
+
+   11 object_data: object_data COMMA STRING COLON value .  [COMMA, RC]
+
+    COMMA  reduce using rule 11 (object_data)
+    RC     reduce using rule 11 (object_data)
+
