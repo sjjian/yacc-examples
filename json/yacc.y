@@ -75,6 +75,10 @@ object:
   {
     $$ = $2
   }
+| LC RC
+  {
+    // no-op
+  }
 
 object_data:
   STRING COLON value // "key": "value"
@@ -91,6 +95,10 @@ array:
   LS array_data RS
   {
     $$ = $2
+  }
+| LS RS
+  {
+    // no-op
   }
 
 array_data:
