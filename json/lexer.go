@@ -2,8 +2,8 @@ package yacc_parseJson
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"os"
 	"strconv"
